@@ -1,23 +1,16 @@
 var keysDown = {};
+var keysReleased = {};
 addEventListener("keydown", function(e){keysDown[e.keyCode] = true;});
-addEventListener("keyup", function(e) { delete keysDown[e.keyCode]; });
+addEventListener("keyup", function(e) { delete keysDown[e.keyCode]; keysReleased[e.keyCode]=true});
+leeqPositionX=0;
+leeqPositionY=0;
+let leeLeft=false;
 let blockLee = false;
 let blockXerath = false;
 let blockXerathq = false;
-let blockLeeq = false;
-let timerLeeq = 0;
-let timerXerathq = 0;
-let timerLee = 0;
-let timerXerath = 0;
-let startingpoint = 0;
+let blockLeeQ = false;
 function keysUpdate() {
-    // if (32 in keysDown) {
-    //     if (!GAME.bullet.visible) {
-    //         GAME.bullet.visible = true;
-    //         GAME.bullet.positionX = GAME.hero.positionX + HERO_WIDTH / 2 - BULLET_WIDTH / 2;
-    //         GAME.bullet.positionY = GAME.hero.positionY;
-    //     }
-    // }
+
     if (68 in keysDown){
         if (leePositionX < canvas.width-lee.width) {
             leePositionX += 10;
@@ -30,39 +23,24 @@ function keysUpdate() {
             lee = leeL;
         }
     }
-    if(87 in keysDown && timerLee ===0){
+    if(87 in keysDown && blockLee===false) {
+        if (leePositionY > document.documentElement.clientHeight - 350) {
+            leePositionY -= 10;
+        }
+        else(keysReleased[87]=true);
+    }
+
+    if(87 in keysReleased) {
+        leePositionY+=10;
+        blockLee=true;
         if(leePositionY===document.documentElement.clientHeight-150)
         {
             blockLee=false;
-        }
-        if(leePositionY>=document.documentElement.clientHeight-350 && blockLee ===false)
-        {
-
-            leePositionY-=10;
-
-        }
-        else if(blockLee===false)
-        {
-            leePositionY+=10;
-            timerLee = 3;
-            setTimeout(function () {
-                timerLee = 0;
-            },200);
+            delete keysReleased[87];
         }
     }
-    else if(leePositionY!==document.documentElement.clientHeight-150)
-    {
-        blockLee = true;
-        timerLee = 3;
-       if(blockLee === true)
-       {
-           leePositionY+=10;
-       }
-        setTimeout(function () {
-            timerLee = 0;
-        },200);
-    }
 
+//Movement Xerath
     if (39 in keysDown){
         if (xerathPositionX < canvas.width-xerath.width/6) {
             xerathPositionX += 5;
@@ -76,45 +54,79 @@ function keysUpdate() {
         }
     }
 
-    if(38 in keysDown && timerXerath ===0){
+    if(38 in keysDown && blockXerath===false) {
+        if (xerathPositionY > document.documentElement.clientHeight - 350) {
+            xerathPositionY -= 10;
+        }
+        else(keysReleased[38]=true);
+    }
+
+    if(38 in keysReleased) {
+        xerathPositionY+=10;
+        blockXerath=true;
         if(xerathPositionY===document.documentElement.clientHeight-150)
         {
             blockXerath=false;
-        }
-        if(xerathPositionY>=document.documentElement.clientHeight-350 && blockXerath ===false)
-        {
-
-            xerathPositionY-=10;
-
-        }
-        else if(blockXerath===false)
-        {
-            xerathPositionY+=10;
-            timerXerath = 3;
-            setTimeout(function () {
-                timerXerath = 0;
-            },200);
+            delete keysReleased[38];
         }
     }
-    else if(xerathPositionY!==document.documentElement.clientHeight-150)
+
+
+    //Lee Q
+
+    if(81 in keysDown && blockLeeQ ===false)
     {
-        blockXerath = true;
-        timerXerath = 3;
-        if(blockXerath === true)
-        {
-            xerathPositionY+=10;
-        }
-        setTimeout(function () {
-            timerXerath = 0;
-        },200);
-    }
-    if(81 in keysDown && timerLeeq === 0) {
-        if(!leeq.visible) {
+        if(lee===leeR) {
+            if(!leeq.visible) {
+            blockLeeQ = true;
             leeq.visible = true;
-            leeqPositionX = leePositionX+150;
-            leeqPositionY = leePositionY+leeq.height/10;
+            leeqPositionX = leePositionX + 150;
+            leeqPositionY = leePositionY + leeq.height / 10;
+            keysReleased[81]=true;
+            leeLeft=false;
+            }
         }
+        else if (lee===leeL)
+        {
+            if(!leeq.visible) {
+                blockLeeQ = true;
+                leeq.visible = true;
+                leeqPositionX = leePositionX + 10;
+                leeqPositionY = leePositionY + leeq.height / 10;
+                keysReleased[81]=true;
+                leeLeft=true;
+            }
+        }
+
     }
+    if(81 in keysReleased && blockLeeQ===true)
+    {
+        if(leeq.visible)
+        {
+            if(leeLeft===false)
+            {
+                leeqPositionX +=20;
+            }
+            else if(leeLeft===true)
+            {
+                leeqPositionX -=20;
+            }
+        }
+        else if(!leeq.visible){
+            blockLeeQ=false;
+            delete keysReleased[81];
+        }
+
+    }
+    // if(81 in keysDown && ) {
+    //     if(!leeq.visible) {
+    //         leeq.visible = true;
+    //         leeqPositionX = leePositionX+150;
+    //         leeqPositionY = leePositionY+leeq.height/10;
+    //     }
+    // }
+
+    //xerath q
     if(96 in keysDown) {
         if(!xerathq.visible)
         {

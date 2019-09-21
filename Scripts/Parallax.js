@@ -1,3 +1,4 @@
+lee=leeR;
 let leePositionY = document.documentElement.clientHeight-150;
 let leePositionX = 10;
 let leeqPositionX;
@@ -28,17 +29,12 @@ function hittestLee() {
         ((xerathPositionY-300 + xerath.height) > leeqPositionY);
 }
 
-function drawLeeBullet() {
+function drawLeeRBullet() {
         if (leeq.visible) {
 
-            if(lee===leeL) {
-                context.drawImage(leeq, leeqPositionX-150, leeqPositionY, 40, 40);
-                leeqPositionX -= 10;
-
-            }
-            else {
+            if(lee===leeR || lee===lee){
                 context.drawImage(leeq, leeqPositionX, leeqPositionY, 40, 40);
-                leeqPositionX +=10;
+                //leeqPositionX +=10;
             }
 
             if(leeqPositionX>document.documentElement.clientWidth || leeqPositionX<0 ) {
@@ -46,7 +42,19 @@ function drawLeeBullet() {
             }
         }
     }
+function drawLeeLBullet() {
+    if (leeq.visible) {
 
+        if(lee===leeR || lee===lee){
+            context.drawImage(leeq, leeqPositionX, leeqPositionY, 40, 40);
+            //leeqPositionX +=10;
+        }
+
+        if(leeqPositionX>document.documentElement.clientWidth || leeqPositionX<0 ) {
+            leeq.visible = false;
+        }
+    }
+}
 function drawXerathBullet() {
          if (xerathq.visible && blockXerathq === false) {
              if (xerath === xerathR ) {
@@ -137,7 +145,8 @@ let render = function() {
     context.drawImage(temple, 0,0, document.documentElement.clientWidth, document.documentElement.clientHeight);
     context.drawImage(lee, leePositionX, leePositionY ,150, 150);
     context.drawImage(xerath, xerathPositionX, xerathPositionY ,150, 150);
-    drawLeeBullet();
+    drawLeeRBullet();
+    drawLeeLBullet();
     drawXerathBullet();
 
     leeScore();
